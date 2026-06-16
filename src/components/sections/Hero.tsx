@@ -64,7 +64,7 @@ export default function Hero({
       {/* Soft overhead light spilling down onto the hero. */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-[70%] pointer-events-none z-0 bg-[radial-gradient(60%_75%_at_50%_-8%,rgba(255,255,255,0.12),rgba(255,255,255,0.04)_42%,transparent_72%)]"
+        className="absolute inset-x-0 top-0 h-[72%] pointer-events-none z-0 bg-[radial-gradient(62%_78%_at_50%_-8%,rgba(255,255,255,0.19),rgba(255,255,255,0.07)_44%,transparent_74%)]"
       />
 
       <div

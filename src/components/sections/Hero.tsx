@@ -61,6 +61,12 @@ export default function Hero({
       ref={root}
       className="relative grid place-items-center min-h-[calc(100vh-65px)] p-6 overflow-hidden"
     >
+      {/* Soft overhead light spilling down onto the hero. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-[70%] pointer-events-none z-0 bg-[radial-gradient(60%_75%_at_50%_-8%,rgba(255,255,255,0.12),rgba(255,255,255,0.04)_42%,transparent_72%)]"
+      />
+
       <div
         aria-hidden="true"
         className="absolute top-[38%] left-1/2 w-[min(900px,90vw)] h-[600px] -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.1),rgba(255,255,255,0.03)_38%,transparent_68%)]"

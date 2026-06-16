@@ -2,6 +2,9 @@
   "name": "codeviz",
   "version": "0.1.0",
   "private": true,
+  "description": "Pega código y obtén un call graph interactivo. Multi-lenguaje vía Tree-sitter.",
+  "license": "MIT",
+  "author": "DataDave-Dev",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,10 +15,15 @@
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
+    "@fontsource-variable/lexend": "^5.2.11",
+    "@gsap/react": "^2.1.2",
+    "@tailwindcss/postcss": "^4.3.1",
+    "gsap": "^3.15.0",
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "reactflow": "^11.11.4",
+    "tailwindcss": "^4.3.1",
     "web-tree-sitter": "^0.22.6"
   },
   "devDependencies": {

@@ -1,6 +1,3 @@
-// Registro de lenguajes soportados. Agregar un lenguaje = importar su analyzer
-// y añadirlo aquí. Es el único lugar que conoce la lista completa.
-
 import type { LanguageAnalyzer } from "./types";
 import { pythonAnalyzer } from "./analyzers/python";
 import { javascriptAnalyzer } from "./analyzers/javascript";

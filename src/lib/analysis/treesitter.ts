@@ -1,6 +1,3 @@
-// Carga y cachea el runtime de Tree-sitter y los grammars (WASM).
-// Corre en el servidor (API route), por eso lee los .wasm del filesystem.
-
 import Parser from "web-tree-sitter";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -11,7 +8,7 @@ let initPromise: Promise<void> | null = null;
 const languageCache = new Map<string, Parser.Language>();
 
 function initRuntime(): Promise<void> {
-  // Parser.init carga tree-sitter.wasm; lo redirigimos a public/wasm.
+  // locateFile points the tree-sitter.wasm runtime load at public/wasm.
   if (!initPromise) {
     initPromise = Parser.init({
       locateFile: (name: string) => path.join(WASM_DIR, name),
@@ -29,7 +26,6 @@ async function loadLanguage(wasmFile: string): Promise<Parser.Language> {
   return language;
 }
 
-/** Devuelve un parser configurado y su Language (necesario para crear queries). */
 export async function getParser(
   wasmFile: string,
 ): Promise<{ parser: Parser; language: Parser.Language }> {

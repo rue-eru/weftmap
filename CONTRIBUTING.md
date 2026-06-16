@@ -1,6 +1,8 @@
-# Contribuir a CodeViz
+# Contributing to CodeViz
 
-¡Gracias por tu interés! Esta guía cubre lo esencial.
+**🌐 Language:** **English** · [Español](CONTRIBUTING.es.md)
+
+Thanks for your interest! This guide covers the essentials.
 
 ## Setup
 
@@ -9,9 +11,9 @@ pnpm install
 pnpm dev
 ```
 
-## Antes de abrir un PR
+## Before opening a PR
 
-Todo esto debe pasar (es lo que corre CI):
+All of these must pass (it's what CI runs):
 
 ```bash
 pnpm lint
@@ -20,21 +22,20 @@ pnpm test
 pnpm build
 ```
 
-## Flujo
+## Workflow
 
-- `main` está protegida: no se puede hacer push directo. Trabaja en una rama y
-  abre un Pull Request.
-- El PR necesita CI en verde y al menos una aprobación para mergear.
-- Commits en formato [Conventional Commits](https://www.conventionalcommits.org/):
+- `main` is protected: no direct pushes. Work on a branch and open a Pull Request.
+- A PR needs CI green and at least one approval to merge.
+- Commits follow [Conventional Commits](https://www.conventionalcommits.org/):
   `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`.
 
-## Agregar un lenguaje
+## Adding a language
 
-Es el tipo de contribución más valioso. Pasos en el
-[README](README.md#agregar-un-lenguaje). Incluye siempre un test del analyzer.
+This is the most valuable kind of contribution. The steps are in the
+[README](README.md#adding-a-language). Always include an analyzer test.
 
-## Estilo
+## Style
 
-- TypeScript, sin `any` en código de aplicación.
-- Archivos pequeños y enfocados.
-- Maneja los errores; no los silencies.
+- TypeScript, no `any` in application code.
+- Small, focused files.
+- Handle errors; never silence them.

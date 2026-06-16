@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { getAnalyzer, SUPPORTED_LANGUAGES } from "@/lib/analysis/registry";
 
-// Necesita el runtime de Node (lee los .wasm del filesystem), no Edge.
+// Needs the Node runtime (reads .wasm from the filesystem), not Edge.
 export const runtime = "nodejs";
 
-const MAX_CODE_BYTES = 100_000; // 100 KB
+const MAX_CODE_BYTES = 100_000;
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -52,8 +52,7 @@ export async function POST(request: Request) {
     const graph = await analyzer.analyze(code);
     return NextResponse.json(graph);
   } catch (err) {
-    // No tragar el error: log en servidor, mensaje genérico al cliente.
-    console.error("Error analizando código:", err);
+    console.error("Error analyzing code:", err);
     return NextResponse.json(
       { error: "No se pudo analizar el código." },
       { status: 500 },

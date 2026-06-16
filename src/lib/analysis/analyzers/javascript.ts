@@ -1,8 +1,7 @@
 import type { LanguageAnalyzer } from "../types";
 import { analyzeWith, type LangSpec } from "./shared";
 
-// Cubre JavaScript y TypeScript (el grammar JS parsea la mayoría de TS sin
-// tipos; para TS con anotaciones pesadas se agregará tree-sitter-typescript).
+// Covers JS and most TS; heavy TS annotations will need tree-sitter-typescript.
 const spec: LangSpec = {
   language: "javascript",
   wasm: "tree-sitter-javascript.wasm",
@@ -15,7 +14,6 @@ const spec: LangSpec = {
       (method_definition)
     ] @def
   `,
-  // Llamadas directas: foo()  y  por miembro: obj.foo()
   callQuery: `
     (call_expression function: (identifier) @callee)
     (call_expression function: (member_expression property: (property_identifier) @callee))

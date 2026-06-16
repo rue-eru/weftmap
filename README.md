@@ -1,77 +1,166 @@
 # CodeViz
 
-Pega código y obtén un **call graph interactivo** para entender qué hace.
-Multi-lenguaje gracias a [Tree-sitter](https://tree-sitter.github.io/): un solo
-motor de parsing, una arquitectura *pluggable* donde agregar un lenguaje son
-unas pocas líneas.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6.svg)](https://www.typescriptlang.org/)
+[![Tree-sitter](https://img.shields.io/badge/Tree--sitter-WASM-green.svg)](https://tree-sitter.github.io/)
 
-> Estado: MVP. Soporta **Python** y **JavaScript/TypeScript**. Diagrama: call
-> graph (funciones como nodos, llamadas como flechas).
+**🌐 Language:** **English** · [Español](README.es.md)
 
-## Cómo funciona
+> Paste code, get an interactive **call graph** to understand what it does —
+> across multiple languages, powered by [Tree-sitter](https://tree-sitter.github.io/).
+
+CodeViz turns source code into a navigable diagram of which functions call
+which. The differentiator is a **pluggable, multi-language architecture**: the
+backend adapts the analysis per language, and adding a new one takes only a few
+lines. No existing free tool does this well across several languages at once.
+
+> **Status:** MVP. Supports **Python** and **JavaScript/TypeScript**. Diagram
+> type: call graph (functions as nodes, calls as arrows).
+
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [How it works](#how-it-works)
+- [Tech stack](#tech-stack)
+- [Getting started](#getting-started)
+- [Available scripts](#available-scripts)
+- [Adding a language](#adding-a-language)
+- [Project structure](#project-structure)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Features
+
+- **Multi-language** — one parsing engine (Tree-sitter) for every language.
+- **Pluggable** — a language is a single `LangSpec` + two Tree-sitter queries.
+- **Interactive diagram** — pan, zoom and drag nodes (React Flow + dagre layout).
+- **Internal call graph** — shows calls between functions defined in your code;
+  calls to builtins/libraries are filtered out to keep the graph meaningful.
+- **No build step for the user** — paste a snippet and hit *Analyze*.
+
+## How it works
 
 ```
-código  →  /api/analyze (Tree-sitter)  →  Graph JSON  →  React Flow (interactivo)
+┌──────────┐   POST /api/analyze   ┌─────────────────────┐   Graph JSON   ┌─────────────┐
+│  Browser │ ────────────────────▶ │  Tree-sitter (WASM) │ ─────────────▶ │  React Flow │
+│ (textarea)│   { code, language }  │  per-language module │  {nodes,edges} │  (dagre)    │
+└──────────┘                       └─────────────────────┘                └─────────────┘
 ```
 
-- **Frontend + backend** en un solo proyecto Next.js (App Router, TypeScript).
-- El backend (`src/app/api/analyze/route.ts`) parsea con Tree-sitter (WASM) y
-  devuelve un grafo normalizado `{ nodes, edges }`.
-- El frontend lo dibuja con React Flow + layout de dagre.
+1. You paste code and pick a language.
+2. The backend (`src/app/api/analyze/route.ts`) validates the input, parses the
+   code with the matching Tree-sitter grammar, and walks the syntax tree to build
+   a normalized graph `{ nodes, edges }`.
+3. The frontend lays it out with [dagre](https://github.com/dagrejs/dagre) and
+   renders it interactively with [React Flow](https://reactflow.dev/).
 
-## Desarrollo
+The call graph is extracted with **declarative Tree-sitter queries** (one for
+function definitions, one for calls) instead of hand-walking the AST — less code,
+easier to maintain, and the same approach works for every language.
 
-Requisitos: Node 20+ y [pnpm](https://pnpm.io/).
+## Tech stack
+
+| Layer | Choice | Why |
+|-------|--------|-----|
+| Framework | Next.js (App Router) | Frontend + backend in one project and one deploy |
+| Language | TypeScript | Type safety across the whole stack |
+| Parsing | Tree-sitter via `web-tree-sitter` (WASM) | One API for ~40 languages |
+| Grammars | `tree-sitter-wasms` | Prebuilt grammar binaries |
+| Diagram | React Flow + dagre | Interactive nodes, hierarchical layout |
+| Tests | Vitest | Fast unit tests for the analyzers |
+| Package manager | pnpm | Fast, disk-efficient installs |
+
+## Getting started
+
+**Requirements:** Node 20+ and [pnpm](https://pnpm.io/).
 
 ```bash
+# 1. Install dependencies
 pnpm install
-pnpm dev        # http://localhost:3000
+
+# 2. Start the dev server
+pnpm dev
+# open http://localhost:3000
 ```
 
-Otros scripts:
+Paste a snippet, choose **python** or **javascript**, and click **Analyze**.
 
-```bash
-pnpm test       # tests de los analyzers (Vitest)
-pnpm typecheck  # tsc --noEmit
-pnpm build      # build de producción
-```
+## Available scripts
 
-## Agregar un lenguaje
+| Command | What it does |
+|---------|--------------|
+| `pnpm dev` | Start the development server |
+| `pnpm build` | Production build |
+| `pnpm start` | Run the production build |
+| `pnpm test` | Run the analyzer tests (Vitest) |
+| `pnpm typecheck` | Type-check with `tsc --noEmit` |
+| `pnpm lint` | Lint with ESLint |
 
-La arquitectura es *pluggable*: el backend adapta el análisis por lenguaje.
+## Adding a language
 
-1. Copia el grammar `tree-sitter-<lang>.wasm` a `public/wasm/`
-   (de [`tree-sitter-wasms`](https://www.npmjs.com/package/tree-sitter-wasms)).
-2. Crea `src/lib/analysis/analyzers/<lang>.ts` con su `LangSpec`
-   (dos queries de Tree-sitter: definiciones y llamadas). Usa
-   [`python.ts`](src/lib/analysis/analyzers/python.ts) como plantilla.
-3. Regístralo en [`src/lib/analysis/registry.ts`](src/lib/analysis/registry.ts).
-4. Añade un test en `src/lib/analysis/analyzers/`.
+This is the most valuable kind of contribution. The architecture is *pluggable*:
+the backend adapts the analysis per language, and nothing else needs to change.
 
-Eso es todo: nada más se toca.
+1. **Add the grammar.** Copy `tree-sitter-<lang>.wasm` into `public/wasm/`
+   (available from the [`tree-sitter-wasms`](https://www.npmjs.com/package/tree-sitter-wasms)
+   package).
+2. **Create the analyzer.** Add `src/lib/analysis/analyzers/<lang>.ts` with a
+   `LangSpec` — two Tree-sitter queries (function definitions and calls) plus the
+   set of node types that count as a function scope. Use
+   [`python.ts`](src/lib/analysis/analyzers/python.ts) as a template.
+3. **Register it.** Add one line to
+   [`src/lib/analysis/registry.ts`](src/lib/analysis/registry.ts).
+4. **Add the UI option.** Add the language key to the `LANGUAGES` array in
+   [`src/app/page.tsx`](src/app/page.tsx).
+5. **Add a test.** Drop a snippet → expected nodes/edges check in
+   `src/lib/analysis/analyzers/`.
 
-## Estructura
+That's it.
+
+## Project structure
 
 ```
 src/
   app/
-    page.tsx                  # UI: textarea + selector + diagrama
-    api/analyze/route.ts      # backend: valida y llama al analyzer
-  components/                 # CodeInput, Diagram (React Flow + dagre)
-  lib/analysis/               # núcleo: types, registry, treesitter, analyzers/
-public/wasm/                  # grammars + runtime de Tree-sitter (.wasm)
+    page.tsx                  # UI: textarea + language selector + diagram
+    api/analyze/route.ts      # backend: validates input, calls the analyzer
+  components/
+    CodeInput.tsx             # textarea + selector + analyze button
+    Diagram.tsx               # React Flow + dagre rendering
+  lib/analysis/
+    types.ts                  # Graph + LanguageAnalyzer contract
+    registry.ts               # language registry (the only file that knows them all)
+    treesitter.ts             # loads/caches the Tree-sitter runtime + grammars
+    analyzers/
+      shared.ts               # common call-graph extraction logic
+      python.ts               # Python LangSpec
+      javascript.ts           # JS/TS LangSpec
+      analyzers.test.ts       # analyzer tests
+public/wasm/                  # Tree-sitter runtime + grammar .wasm files
 ```
 
 ## Roadmap
 
-- Más lenguajes (Go, Java, C/C++).
-- Más tipos de diagrama: control-flow y dependencias entre módulos.
-- Input por archivo/ZIP y por URL de repo.
+- [ ] More languages: Go, Java, C/C++.
+- [ ] First-class TypeScript via `tree-sitter-typescript` (types, generics).
+- [ ] More diagram types: control-flow and module-dependency graphs.
+- [ ] Node interaction: click to highlight callers/callees, function detail panel.
+- [ ] More input methods: file/ZIP upload and GitHub repo URL.
 
-## Contribuir
+## Contributing
 
-Lee [CONTRIBUTING.md](CONTRIBUTING.md). Issues y PRs bienvenidos.
+Contributions are welcome — especially new languages. Please read
+[CONTRIBUTING.md](CONTRIBUTING.md) and our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## Licencia
+Quick rules: `main` is protected (open a PR, CI must pass, one review required),
+and commits follow [Conventional Commits](https://www.conventionalcommits.org/).
 
-[MIT](LICENSE).
+## License
+
+[MIT](LICENSE) © DataDave-Dev

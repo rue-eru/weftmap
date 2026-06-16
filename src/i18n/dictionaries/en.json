@@ -1,0 +1,63 @@
+{
+  "title": "CodeViz",
+  "badge": "Open source · Multi-language",
+  "hero": "Understand any code at a glance.",
+  "tagline": "Paste code and get an interactive call graph. Multi-language via Tree-sitter.",
+  "getStarted": "Get started",
+  "learnMore": "Learn more",
+  "supports": "Supports",
+  "moreLanguagesSoon": "More languages coming soon",
+  "howTitle": "How it works",
+  "steps": [
+    {
+      "title": "Paste your code",
+      "desc": "Pick a language and drop in a snippet — no setup, no upload."
+    },
+    {
+      "title": "Tree-sitter parses it",
+      "desc": "A real syntax tree is built on the server, fast and language-agnostic."
+    },
+    {
+      "title": "Explore the call graph",
+      "desc": "Pan, zoom and follow how functions call each other."
+    }
+  ],
+  "featuresTitle": "Built to read code",
+  "features": [
+    {
+      "title": "Multi-language",
+      "desc": "One parsing engine, many languages. Powered by Tree-sitter."
+    },
+    {
+      "title": "Interactive diagrams",
+      "desc": "Pan, zoom and explore the call graph of your code."
+    },
+    {
+      "title": "Pluggable",
+      "desc": "Add a new language in just a few lines. Built to extend."
+    },
+    {
+      "title": "Accurate parsing",
+      "desc": "Real syntax trees via Tree-sitter, not fragile regex."
+    },
+    {
+      "title": "No setup",
+      "desc": "Paste a snippet and visualize. Nothing to install."
+    },
+    {
+      "title": "Open source",
+      "desc": "Free, MIT-licensed, and community-driven."
+    }
+  ],
+  "license": "License",
+  "contribute": "Contribute",
+  "footerNote": "Open source, built to be extended.",
+  "appTitle": "Try it now",
+  "languageLabel": "Language",
+  "analyze": "Analyze",
+  "analyzing": "Analyzing…",
+  "inputPlaceholder": "Paste your code here…",
+  "diagramPlaceholder": "The diagram will appear here.",
+  "noFunctions": "No functions found in the code.",
+  "comingSoon": "New interface coming soon."
+}

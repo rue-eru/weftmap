@@ -1,0 +1,63 @@
+{
+  "title": "CodeViz",
+  "badge": "Open source · Multi-lenguaje",
+  "hero": "Entiende cualquier código de un vistazo.",
+  "tagline": "Pega código y obtén un call graph interactivo. Multi-lenguaje vía Tree-sitter.",
+  "getStarted": "Empezar",
+  "learnMore": "Saber más",
+  "supports": "Soporta",
+  "moreLanguagesSoon": "Pronto se incluirán más lenguajes",
+  "howTitle": "Cómo funciona",
+  "steps": [
+    {
+      "title": "Pega tu código",
+      "desc": "Elige un lenguaje y pega un fragmento — sin configurar ni subir nada."
+    },
+    {
+      "title": "Tree-sitter lo analiza",
+      "desc": "Construye un árbol de sintaxis real en el servidor, rápido y multi-lenguaje."
+    },
+    {
+      "title": "Explora el call graph",
+      "desc": "Desplaza, haz zoom y sigue cómo se llaman las funciones."
+    }
+  ],
+  "featuresTitle": "Hecho para leer código",
+  "features": [
+    {
+      "title": "Multi-lenguaje",
+      "desc": "Un solo motor de parsing, muchos lenguajes. Con Tree-sitter."
+    },
+    {
+      "title": "Diagramas interactivos",
+      "desc": "Desplaza, haz zoom y explora el call graph de tu código."
+    },
+    {
+      "title": "Extensible",
+      "desc": "Agrega un lenguaje nuevo en unas pocas líneas. Pensado para crecer."
+    },
+    {
+      "title": "Análisis preciso",
+      "desc": "Árboles de sintaxis reales con Tree-sitter, no regex frágiles."
+    },
+    {
+      "title": "Sin configuración",
+      "desc": "Pega un snippet y visualiza. Nada que instalar."
+    },
+    {
+      "title": "Open source",
+      "desc": "Gratis, licencia MIT y guiado por la comunidad."
+    }
+  ],
+  "license": "Licencia",
+  "contribute": "Contribuir",
+  "footerNote": "Open source, hecho para extenderse.",
+  "appTitle": "Pruébalo ahora",
+  "languageLabel": "Lenguaje",
+  "analyze": "Analizar",
+  "analyzing": "Analizando…",
+  "inputPlaceholder": "Pega tu código aquí…",
+  "diagramPlaceholder": "El diagrama aparecerá aquí.",
+  "noFunctions": "No se encontraron funciones en el código.",
+  "comingSoon": "Nueva interfaz próximamente."
+}

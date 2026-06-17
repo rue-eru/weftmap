@@ -24,28 +24,18 @@ type Fk = {
   fromTable: string; // normalized key
   fromCols: string[];
   toTable: string;
-  toCols: string[];
 };
 
 type Table = {
   key: string;
   label: string;
   columns: Map<string, TableColumn>;
-  order: string[];
   pk: Set<string>;
 };
 
-/** Last `identifier` under an `object_reference` (handles schema-qualified names). */
+/** Table name from an `object_reference` (the `name` field, sans quotes). */
 function refName(node: Node | null): string | null {
-  if (!node) return null;
-  const named = node.childForFieldName("name");
-  if (named) return named.text;
-  // Fallback: last identifier child.
-  for (let i = node.namedChildCount - 1; i >= 0; i--) {
-    const c = node.namedChild(i)!;
-    if (c.type === "identifier") return c.text;
-  }
-  return null;
+  return node?.childForFieldName("name")?.text ?? null;
 }
 
 function childOfType(node: Node, type: string): Node | null {
@@ -98,16 +88,7 @@ function readConstraint(
   if (isFk) {
     const toTable = refName(childOfType(node, "object_reference"));
     if (!toTable) return;
-    // Target columns: the trailing identifier(s) after the object_reference.
-    const toCols: string[] = [];
-    const ref = childOfType(node, "object_reference");
-    for (let i = 0; i < node.namedChildCount; i++) {
-      const c = node.namedChild(i)!;
-      if (ref && c.startIndex > ref.startIndex && c.type === "identifier") {
-        toCols.push(norm(c.text));
-      }
-    }
-    fks.push({ fromTable: table.key, fromCols: cols, toTable: norm(toTable), toCols });
+    fks.push({ fromTable: table.key, fromCols: cols, toTable: norm(toTable) });
   }
 }
 
@@ -129,21 +110,12 @@ function readColumn(node: Node, table: Table, fks: Fk[]): void {
     unique,
   };
   table.columns.set(name, col);
-  table.order.push(name);
   if (pk) table.pk.add(name);
 
   if (isFk) {
     const toTable = refName(childOfType(node, "object_reference"));
     if (!toTable) return;
-    const ref = childOfType(node, "object_reference");
-    const toCols: string[] = [];
-    for (let i = 0; i < node.namedChildCount; i++) {
-      const c = node.namedChild(i)!;
-      if (ref && c.startIndex > ref.startIndex && c.type === "identifier") {
-        toCols.push(norm(c.text));
-      }
-    }
-    fks.push({ fromTable: table.key, fromCols: [name], toTable: norm(toTable), toCols });
+    fks.push({ fromTable: table.key, fromCols: [name], toTable: norm(toTable) });
   }
 }
 
@@ -153,7 +125,7 @@ function readCreateTable(node: Node, tables: Map<string, Table>, fks: Fk[]): voi
   const key = norm(rawName);
   const table: Table =
     tables.get(key) ??
-    { key, label: rawName.replace(/^"(.*)"$/, "$1"), columns: new Map(), order: [], pk: new Set() };
+    { key, label: rawName.replace(/^"(.*)"$/, "$1"), columns: new Map(), pk: new Set() };
   tables.set(key, table);
 
   const defs = childOfType(node, "column_definitions");
@@ -275,7 +247,7 @@ async function analyzeProject(files: SourceFile[]): Promise<Graph> {
     id: tableId(t.key),
     label: t.label,
     type: "table",
-    columns: t.order.map((c) => t.columns.get(c)!),
+    columns: [...t.columns.values()],
   }));
 
   const edges: GraphEdge[] = [];
